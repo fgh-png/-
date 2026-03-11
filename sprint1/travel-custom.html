@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI旅行定制 - TravelGo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- 新增：引入专业的Markdown解析库（替代简易正则） -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#f97316',
+                        neutral: {
+                            100: '#f8fafc',
+                            200: '#e2e8f0',
+                            800: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto { content-visibility: auto; }
+            .card-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+            .nav-active { @apply text-primary border-b-2 border-primary; }
+            .content-padding { padding-bottom: 60px; }
+            @media (min-width: 768px) { .content-padding { padding-bottom: 0; } }
+            .option-active { @apply bg-primary text-white border-primary; }
+            /* 加载动画 */
+            .loading-dot {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #2563eb;
+                margin: 0 2px;
+                animation: loading 1.4s infinite ease-in-out both;
+            }
+            .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+            .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+            @keyframes loading {
+                0%, 80%, 100% { transform: scale(0); }
+                40% { transform: scale(1); }
+            }
+            /* 优化Markdown渲染样式 */
+            .markdown-content h2 { @apply text-2xl font-bold my-4 text-neutral-800; }
+            .markdown-content h3 { @apply text-xl font-bold my-3 text-neutral-800; }
+            .markdown-content h4 { @apply text-lg font-bold my-2 text-neutral-800; }
+            .markdown-content ul { @apply list-disc pl-6 my-2 space-y-1; }
+            .markdown-content p { @apply my-2 leading-relaxed; }
+            .markdown-content strong { @apply font-bold text-neutral-800; }
+        }
+    </style>
+</head>
+
+<body class="bg-neutral-100 font-sans text-neutral-800">
+<!-- 顶部导航 -->
+<header class="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2">
+            <i class="fa-solid fa-plane-departure text-2xl text-primary"></i>
+            <span class="text-xl font-bold text-primary">TravelGo</span>
+        </a>
+        <a href="index.html" class="text-sm text-neutral-600 hover:text-primary">
+            <i class="fa-solid fa-arrow-left mr-1"></i>返回首页
+        </a>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 pt-24 pb-20 content-padding">
+    <!-- 标题 -->
+    <section class="text-center mb-8">
+        <h1 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold text-neutral-800 mb-2">
+            AI 智能旅行定制
+        </h1>
+        <p class="text-neutral-500">输入需求，一键生成专属澳门旅行方案</p>
+    </section>
+
+    <!-- 定制表单卡片 -->
+    <section class="max-w-3xl mx-auto mb-10">
+        <div class="bg-white rounded-2xl card-shadow p-6 md:p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- 出发地 -->
+                <div>
+                    <label class="block text-sm font-medium text-neutral-700 mb-2">
+                        <i class="fa-solid fa-plane-departure text-primary mr-1"></i>出发地
+                    </label>
+                    <input id="from" type="text" placeholder="例如：广州"
+                           class="w-full px-4 py-3 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                </div>
+
+                <!-- 目的地 -->
+                <div>
+                    <label class="block text-sm font-medium text-neutral-700 mb-2">
+                        <i class="fa-solid fa-map-marker-alt text-primary mr-1"></i>目的地
+                    </label>
+                    <input id="to" type="text" placeholder="默认：澳门" value="澳门"
+                           class="w-full px-4 py-3 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                </div>
+
+                <!-- 人数 -->
+                <div>
+                    <label class="block text-sm font-medium text-neutral-700 mb-2">
+                        <i class="fa-solid fa-users text-primary mr-1"></i>出行人数
+                    </label>
+                    <input id="people" type="number" min="1" value="2"
+                           class="w-full px-4 py-3 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                </div>
+
+                <!-- 天数 -->
+                <div>
+                    <label class="block text-sm font-medium text-neutral-700 mb-2">
+                        <i class="fa-solid fa-calendar text-primary mr-1"></i>游玩天数
+                    </label>
+                    <input id="days" type="number" min="1" value="2"
+                           class="w-full px-4 py-3 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                </div>
+            </div>
+
+            <!-- 性价比偏好 -->
+            <div class="mt-6">
+                <label class="block text-sm font-medium text-neutral-700 mb-3">
+                    <i class="fa-solid fa-wallet text-primary mr-1"></i>预算偏好
+                </label>
+                <div class="flex flex-wrap gap-3">
+                    <button class="budget-btn option-active px-4 py-2 rounded-full border transition" data-type="经济型">经济型</button>
+                    <button class="budget-btn px-4 py-2 rounded-full border border-neutral-200 transition" data-type="舒适型">舒适型</button>
+                    <button class="budget-btn px-4 py-2 rounded-full border border-neutral-200 transition" data-type="高端型">高端型</button>
+                </div>
+            </div>
+
+            <!-- 生成按钮 -->
+            <div class="mt-8 text-center">
+                <button id="generatePlan" class="bg-secondary hover:bg-secondary/90 text-white px-8 py-3 rounded-lg font-medium transition w-full md:w-auto">
+                    <i class="fa-solid fa-robot mr-2"></i>AI 生成旅行方案
+                </button>
+            </div>
+            <div class="mt-4 text-center">
+                <a href="map-plan.html" class="text-primary text-sm hover:underline">
+                    <i class="fa-solid fa-map mr-1"></i>地图模式规划行程
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 生成结果区域 -->
+    <section id="resultSection" class="max-w-4xl mx-auto hidden">
+        <div class="bg-white rounded-2xl card-shadow p-6 md:p-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-neutral-800">
+                    <i class="fa-solid fa-lightbulb text-secondary mr-2"></i>你的专属旅行方案
+                </h3>
+                <button id="refreshPlan" class="text-primary text-sm hover:underline">
+                    <i class="fa-solid fa-refresh"></i> 重新生成
+                </button>
+            </div>
+
+            <!-- 新增markdown-content类，优化样式 -->
+            <div id="planContent" class="markdown-content space-y-4 text-neutral-700 text-sm md:text-base leading-relaxed">
+                <!-- AI方案内容在这里 -->
+            </div>
+
+            <div class="mt-6 flex justify-end gap-3">
+                <!-- 新增导出方案的点击事件 -->
+                <button class="text-neutral-600 px-4 py-2 rounded-lg border border-neutral-200 hover:bg-neutral-100 transition" onclick="exportPlan()">
+                    <i class="fa-solid fa-download mr-1"></i>导出方案
+                </button>
+                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition">
+                    <i class="fa-solid fa-check mr-1"></i>立即使用
+                </button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- 移动端底部导航 -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 py-2">
+    <div class="flex justify-around">
+        <a href="index.html" class="flex flex-col items-center text-neutral-500 py-1 transition">
+            <i class="fa-solid fa-home text-lg"></i>
+            <span class="text-xs mt-1">首页</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-primary py-1 transition">
+            <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+            <span class="text-xs mt-1">定制</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-neutral-500 py-1 transition">
+            <i class="fa-solid fa-user text-lg"></i>
+            <span class="text-xs mt-1">我的</span>
+        </a>
+    </div>
+</nav>
+
+<script>
+    // 预算选择
+    const budgetBtns = document.querySelectorAll('.budget-btn');
+    let selectedBudget = '经济型';
+
+    budgetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            budgetBtns.forEach(b => b.classList.remove('option-active'));
+            btn.classList.add('option-active');
+            selectedBudget = btn.dataset.type;
+        });
+    });
+
+    // 生成方案（绑定点击事件）
+    document.getElementById('generatePlan').addEventListener('click', generatePlan);
+    document.getElementById('refreshPlan').addEventListener('click', generatePlan);
+
+    // 核心：修改为调用阿里云百炼的Flask后端API
+    async function generatePlan() {
+        // 1. 表单验证（新增：必填出发地）
+        const from = document.getElementById('from').value.trim();
+        if (!from) {
+            alert('请填写出发地！');
+            return;
+        }
+
+        // 2. 获取表单数据
+        const to = document.getElementById('to').value || '澳门';
+        const people = document.getElementById('people').value || 2;
+        const days = document.getElementById('days').value || 2;
+        const budget = selectedBudget;
+
+        // 3. 显示结果区 + 加载状态
+        document.getElementById('resultSection').classList.remove('hidden');
+        const planContent = document.getElementById('planContent');
+        planContent.innerHTML = `
+            <div class="text-center py-8">
+                <div class="mb-2">AI正在为你定制专属旅行方案</div>
+                <div>
+                    <span class="loading-dot"></span>
+                    <span class="loading-dot"></span>
+                    <span class="loading-dot"></span>
+                </div>
+            </div>
+        `;
+
+        try {
+            // 4. 调用本地Flask后端（替换原来的通用API地址）
+            const response = await fetch('http://localhost:5000/api/generate-travel-plan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    from: from,
+                    to: to,
+                    people: people,
+                    days: days,
+                    budget: budget
+                })
+            });
+
+            // 5. 处理响应
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || `请求失败：${response.status}`);
+            }
+
+            // 6. 用marked解析Markdown（替换原来的简易正则转换）
+            const formattedHtml = marked.parse(data.plan);
+            planContent.innerHTML = formattedHtml;
+
+        } catch (error) {
+            // 7. 异常处理
+            planContent.innerHTML = `
+                <div class="text-center py-8 text-neutral-600">
+                    <i class="fa-solid fa-triangle-exclamation text-xl text-yellow-500 mb-2"></i>
+                    <div>生成失败：${error.message}</div>
+                    <div class="mt-2 text-sm">请检查后端服务是否启动或API Key配置</div>
+                </div>
+            `;
+            console.error('AI生成失败：', error);
+        }
+    }
+
+    // 新增：导出方案功能
+    function exportPlan() {
+        const planContent = document.getElementById('planContent').innerText;
+        const from = document.getElementById('from').value || '未知';
+        const days = document.getElementById('days').value || 2;
+        const budget = selectedBudget;
+        
+        const blob = new Blob([planContent], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `澳门${days}天${budget}旅行方案_从${from}出发.txt`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        alert('旅行方案已成功导出！');
+    }
+</script>
+</body>
+</html>

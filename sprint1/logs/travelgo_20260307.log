@@ -1,0 +1,10 @@
+2026-03-07 18:02:44,650 - travelgo-backend - INFO - 阿里云百炼客户端初始化成功
+2026-03-07 18:02:44,652 - travelgo-backend - INFO - 启动TravelGo后端服务：http://0.0.0.0:5000
+2026-03-07 18:02:44,766 - werkzeug - WARNING -  * Debugger is active!
+2026-03-07 18:02:44,866 - werkzeug - INFO -  * Debugger PIN: 335-782-594
+2026-03-07 18:11:43,662 - werkzeug - INFO -  * Detected change in 'C:\\Users\\D1355\\Desktop\\sprint1\\app.py', reloading
+2026-03-07 18:11:48,199 - travelgo-backend - INFO - 阿里云百炼客户端初始化成功
+2026-03-07 18:11:48,201 - travelgo-backend - INFO - 启动TravelGo后端服务：http://0.0.0.0:5000
+2026-03-07 18:11:48,281 - werkzeug - WARNING -  * Debugger is active!
+2026-03-07 18:11:48,350 - werkzeug - INFO -  * Debugger PIN: 335-782-594
+2026-03-08 11:11:46,390 - werkzeug - INFO -  * Detected change in 'C:\\Users\\D1355\\Desktop\\sprint1\\app.py', reloading

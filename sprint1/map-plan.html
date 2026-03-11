@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地图行程规划 - TravelGo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 高德地图 JS API v2.0（替换为你的Web端Key） -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=d3192bd2ea4909397d73277b63e7ed49"></script>
+    <!-- 高德UI组件库（兼容v2.0的1.1版本） -->
+    <link rel="stylesheet" href="https://webapi.amap.com/ui/1.1/main.css"/>
+    <script type="text/javascript" src="https://webapi.amap.com/ui/1.1/main.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#f97316',
+                        neutral: {
+                            100: '#f8fafc',
+                            200: '#e2e8f0',
+                            800: '#1e293b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto { content-visibility: auto; }
+            .card-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+            .map-height { height: calc(100vh - 180px); }
+            .poi-active { @apply bg-primary text-white; }
+        }
+    </style>
+</head>
+<body class="bg-neutral-100 font-sans text-neutral-800">
+<!-- 顶部导航 -->
+<header class="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2">
+            <i class="fa-solid fa-plane-departure text-2xl text-primary"></i>
+            <span class="text-xl font-bold text-primary">TravelGo</span>
+        </a>
+        <div class="flex gap-3">
+            <button id="savePlan" class="bg-secondary text-white px-4 py-2 rounded-lg text-sm hover:bg-secondary/90 transition-colors">
+                <i class="fa-solid fa-save mr-1"></i>保存行程
+            </button>
+            <a href="travel-custom.html" class="text-neutral-600 hover:text-primary text-sm transition-colors">
+                <i class="fa-solid fa-arrow-left mr-1"></i>返回定制
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 pt-24 pb-20">
+    <!-- 地图+行程编辑区 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 左侧行程编辑面板 -->
+        <div class="lg:col-span-1 bg-white rounded-2xl card-shadow p-4 h-fit">
+            <h3 class="text-lg font-bold mb-4 flex items-center">
+                <i class="fa-solid fa-route text-secondary mr-2"></i>我的行程
+            </h3>
+            
+            <!-- 天数选择 -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2">游玩天数</label>
+                <select id="daySelector" class="w-full px-3 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-1 focus:ring-primary">
+                    <option value="1">1天</option>
+                    <option value="2" selected>2天</option>
+                    <option value="3">3天</option>
+                    <option value="4">4天</option>
+                    <option value="5">5天</option>
+                </select>
+            </div>
+            
+            <!-- 行程点位列表 -->
+            <div id="itineraryList" class="space-y-3 max-h-[500px] overflow-y-auto">
+                <!-- Day 1 -->
+                <div class="day-section mb-4">
+                    <h4 class="text-sm font-bold mb-2 text-primary">Day 1</h4>
+                    <ul id="day1Points" class="space-y-2"></ul>
+                </div>
+                <!-- Day 2 -->
+                <div class="day-section mb-4">
+                    <h4 class="text-sm font-bold mb-2 text-primary">Day 2</h4>
+                    <ul id="day2Points" class="space-y-2"></ul>
+                </div>
+                <!-- Day 3 -->
+                <div class="day-section mb-4">
+                    <h4 class="text-sm font-bold mb-2 text-primary">Day 3</h4>
+                    <ul id="day3Points" class="space-y-2"></ul>
+                </div>
+                <!-- Day 4 -->
+                <div class="day-section mb-4">
+                    <h4 class="text-sm font-bold mb-2 text-primary">Day 4</h4>
+                    <ul id="day4Points" class="space-y-2"></ul>
+                </div>
+                <!-- Day 5 -->
+                <div class="day-section mb-4">
+                    <h4 class="text-sm font-bold mb-2 text-primary">Day 5</h4>
+                    <ul id="day5Points" class="space-y-2"></ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 右侧地图区域 -->
+        <div class="lg:col-span-2 bg-white rounded-2xl card-shadow overflow-hidden">
+            <!-- 地图筛选栏 -->
+            <div class="p-3 border-b flex flex-wrap gap-2">
+                <button class="poi-filter poi-active px-3 py-1 rounded-full text-sm transition-colors" data-type="scenic">
+                    <i class="fa-solid fa-landmark mr-1"></i>景点
+                </button>
+                <button class="poi-filter px-3 py-1 rounded-full text-sm border border-neutral-200 hover:bg-neutral-100 transition-colors" data-type="hotel">
+                    <i class="fa-solid fa-hotel mr-1"></i>酒店
+                </button>
+                <button class="poi-filter px-3 py-1 rounded-full text-sm border border-neutral-200 hover:bg-neutral-100 transition-colors" data-type="restaurant">
+                    <i class="fa-solid fa-utensils mr-1"></i>餐厅
+                </button>
+                <button class="ml-auto px-3 py-1 rounded-full text-sm border border-neutral-200 hover:bg-neutral-100 transition-colors" onclick="fitMacao()">
+                    <i class="fa-solid fa-map mr-1"></i>定位澳门
+                </button>
+            </div>
+            
+            <!-- 地图容器 -->
+            <div id="mapContainer" class="map-height w-full"></div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // 全局变量
+    let map = null; // 高德地图实例
+    let selectedDay = 2; // 默认选中天数
+    let poiMarkers = []; // 地图上的POI标记
+    let itineraryPoints = { // 行程点位数据
+        1: [{name: "大三巴牌坊", type: "scenic", lnglat: [113.543953, 22.198041]}],
+        2: [],
+        3: [],
+        4: [],
+        5: []
+    };
+    
+    // 页面加载完成初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        initMap(); // 初始化地图
+        initEventListeners(); // 初始化事件监听
+        renderItinerary(); // 渲染行程列表
+    });
+    
+    // 1. 初始化高德地图
+    function initMap() {
+        try {
+            // 初始化地图，中心点为澳门
+            map = new AMap.Map('mapContainer', {
+                zoom: 14, // 缩放级别
+                center: [113.543953, 22.198041], // 澳门中心点坐标
+                resizeEnable: true,
+                mapStyle: 'amap://styles/normal'
+            });
+            
+            // 加载地图插件
+            AMap.plugin(['AMap.Marker', 'AMap.ToolBar', 'AMap.Scale', 'AMap.PoiSearch', 'AMap.Driving'], function() {
+                // 添加地图控件
+                map.addControl(new AMap.ToolBar({ position: 'RB' }));
+                map.addControl(new AMap.Scale({ position: 'RB' }));
+                
+                // 加载默认POI（景点）
+                loadPOIs('scenic');
+            });
+            
+            console.log("地图初始化成功");
+        } catch (e) {
+            console.error("地图初始化失败：", e);
+            alert("地图加载失败，请检查Key配置或网络连接");
+        }
+    }
+    
+    // 2. 加载POI数据（景点/酒店/餐厅）
+    function loadPOIs(type) {
+        // 清除原有标记
+        poiMarkers.forEach(marker => {
+            try { marker.remove(); } catch (e) {}
+        });
+        poiMarkers = [];
+
+        // POI类型映射（高德Web服务API的分类码）
+        const typeMap = {
+            scenic: '110000',    // 风景名胜
+            hotel: '100000',     // 酒店
+            restaurant: '050000' // 餐饮服务
+        };
+
+        // 从环境变量或配置中获取你的高德Key
+        const key = 'f6d01b985f4c34e64acf127fc2bb4c3f'; // 替换为你的真实Key
+        const url = `https://restapi.amap.com/v3/place/text?keywords=&types=${typeMap[type]}&city=澳门&key=${key}&extensions=all`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === '1' && data.pois) {
+                    const pois = data.pois;
+                    console.log(`✅ 加载到 ${pois.length} 个 POI`);
+
+                    // 遍历POI创建标记
+                    pois.forEach(poi => {
+                        if (!poi.location) return;
+                        const [lng, lat] = poi.location.split(',').map(Number);
+
+                        // 自定义图标
+                        const iconType = {
+                            scenic: 'fa-landmark',
+                            hotel: 'fa-hotel',
+                            restaurant: 'fa-utensils'
+                        };
+
+                        // 自定义DOM标记
+                        const markerContent = document.createElement('div');
+                        markerContent.className = `flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-md cursor-pointer
+                                                ${type === 'scenic' ? 'text-secondary' : type === 'hotel' ? 'text-primary' : 'text-green-500'}`;
+                        markerContent.innerHTML = `<i class="fa-solid ${iconType[type]}"></i>`;
+                        markerContent.title = poi.name;
+
+                        // 创建标记
+                        const marker = new AMap.Marker({
+                            position: [lng, lat],
+                            content: markerContent,
+                            anchor: 'center'
+                        });
+
+                        // 标记点击事件：添加到行程
+                        marker.on('click', function() {
+                            addPointToItinerary({
+                                name: poi.name,
+                                type: type,
+                                lnglat: [lng, lat]
+                            });
+                        });
+
+                        // 添加到地图和标记列表
+                        marker.addTo(map);
+                        poiMarkers.push(marker);
+                    });
+                } else {
+                    console.warn("⚠️ POI搜索无结果：", data);
+                    alert(`未找到相关地点：${data.info || '未知错误'}`);
+                }
+            })
+            .catch(error => {
+                console.error("❌ POI搜索失败：", error);
+                alert("POI搜索功能异常，请检查网络或Key配置");
+            });
+    }
+    // 3. 添加点位到行程
+    function addPointToItinerary(point) {
+        // 添加到行程数据
+        if (!itineraryPoints[selectedDay]) {
+            itineraryPoints[selectedDay] = [];
+        }
+        itineraryPoints[selectedDay].push(point);
+        
+        // 重新渲染行程列表
+        renderItinerary();
+        
+        // 提示
+        alert(`已将【${point.name}】添加到第${selectedDay}天行程`);
+    }
+    
+    // 4. 渲染行程列表
+    function renderItinerary() {
+        // 遍历天数渲染
+        for (let day = 1; day <= 5; day++) {
+            const points = itineraryPoints[day] || [];
+            const ul = document.getElementById(`day${day}Points`);
+            
+            // 检查DOM元素是否存在
+            if (!ul) {
+                console.warn(`未找到Day ${day}的行程列表容器`);
+                continue;
+            }
+            
+            // 清空列表
+            ul.innerHTML = '';
+            
+            if (points.length === 0) {
+                ul.innerHTML = '<li class="text-center text-sm text-neutral-400 py-2">点击地图点位添加行程</li>';
+                continue;
+            }
+            
+            // 渲染每个点位
+            points.forEach((point, index) => {
+                const iconType = {
+                    scenic: 'fa-landmark text-secondary',
+                    hotel: 'fa-hotel text-primary',
+                    restaurant: 'fa-utensils text-green-500'
+                };
+                
+                const li = document.createElement('li');
+                li.className = 'flex items-center justify-between p-2 border rounded-lg group hover:border-primary transition-colors';
+                li.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid ${iconType[point.type]}"></i>
+                        <span class="text-sm">${point.name}</span>
+                    </div>
+                    <div class="opacity-0 group-hover:opacity-100 flex gap-1 transition-opacity">
+                        <button class="text-xs text-neutral-500 hover:text-primary" onclick="moveUp(${day}, ${index})">
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </button>
+                        <button class="text-xs text-neutral-500 hover:text-primary" onclick="moveDown(${day}, ${index})">
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </button>
+                        <button class="text-xs text-neutral-500 hover:text-red-500" onclick="removePoint(${day}, ${index})">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                ul.appendChild(li);
+            });
+        }
+        
+        // 绘制行程线路
+        drawItineraryLine();
+    }
+    
+    // 5. 绘制行程线路（智能路线规划）
+    function drawItineraryLine() {
+        // 清除原有线路
+        try {
+            map.getAllOverlays('polyline').forEach(line => line.remove());
+        } catch (e) {}
+        
+        // 遍历每天行程
+        for (let day = 1; day <= 5; day++) {
+            const points = itineraryPoints[day] || [];
+            if (points.length < 2) continue;
+            
+            // 提取坐标数组
+            const waypoints = points.map(p => p.lnglat);
+            
+            // 调用高德驾车路线规划（自动算最优路径）
+            AMap.plugin('AMap.Driving', function() {
+                const driving = new AMap.Driving({
+                    map: map,
+                    panel: null, // 不显示面板
+                    hideMarkers: true, // 隐藏默认Marker
+                    strokeColor: '#2563eb',
+                    strokeWeight: 3,
+                    strokeOpacity: 0.8
+                });
+                
+                // 起点、途经点、终点
+                const start = waypoints[0];
+                const end = waypoints[waypoints.length - 1];
+                const midPoints = waypoints.slice(1, -1).map(lnglat => ({
+                    lnglat: lnglat
+                }));
+                
+                // 规划路线
+                driving.search(start, end, midPoints, function(status, result) {
+                    if (status === 'complete') {
+                        console.log(`第${day}天路线规划成功`);
+                    } else {
+                        console.error(`第${day}天路线规划失败: ${status}`);
+                    }
+                });
+            });
+        }
+    }
+    
+    // 6. 行程操作：上移点位
+    function moveUp(day, index) {
+        if (index <= 0) return;
+        // 交换数组元素
+        [itineraryPoints[day][index], itineraryPoints[day][index-1]] = 
+        [itineraryPoints[day][index-1], itineraryPoints[day][index]];
+        renderItinerary();
+    }
+    
+    // 7. 行程操作：下移点位
+    function moveDown(day, index) {
+        if (!itineraryPoints[day] || index >= itineraryPoints[day].length - 1) return;
+        // 交换数组元素
+        [itineraryPoints[day][index], itineraryPoints[day][index+1]] = 
+        [itineraryPoints[day][index+1], itineraryPoints[day][index]];
+        renderItinerary();
+    }
+    
+    // 8. 行程操作：删除点位
+    function removePoint(day, index) {
+        if (!itineraryPoints[day]) return;
+        if (confirm('确定删除该点位吗？')) {
+            itineraryPoints[day].splice(index, 1);
+            renderItinerary();
+        }
+    }
+    
+    // 9. 初始化事件监听
+    function initEventListeners() {
+        // 天数选择切换
+        const daySelector = document.getElementById('daySelector');
+        if (daySelector) {
+            daySelector.addEventListener('change', function() {
+                selectedDay = parseInt(this.value);
+            });
+        }
+        
+        // POI类型筛选
+        document.querySelectorAll('.poi-filter').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // 切换选中样式
+                document.querySelectorAll('.poi-filter').forEach(b => {
+                    b.classList.remove('poi-active');
+                    b.classList.add('border', 'border-neutral-200');
+                });
+                this.classList.add('poi-active');
+                this.classList.remove('border', 'border-neutral-200');
+                
+                // 加载对应POI
+                loadPOIs(this.dataset.type);
+            });
+        });
+        
+        // 保存行程（提交到后端）
+        const savePlanBtn = document.getElementById('savePlan');
+        if (savePlanBtn) {
+            savePlanBtn.addEventListener('click', function() {
+                saveItineraryToBackend();
+            });
+        }
+    }
+    
+    // 10. 定位到澳门
+    function fitMacao() {
+        if (map) {
+            map.setCenter([113.543953, 22.198041]);
+            map.setZoom(14);
+        }
+    }
+    
+    // 11. 保存行程到后端
+    async function saveItineraryToBackend() {
+        try {
+            // 构造请求数据
+            const data = {
+                days: selectedDay,
+                budget: '经济型', // 可从前端其他参数获取
+                people: 2, // 可从前端其他参数获取
+                itinerary: itineraryPoints
+            };
+            
+            // 调用后端接口
+            const response = await fetch('http://localhost:5000/api/save-itinerary', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                alert('行程保存成功！即将生成优化方案');
+                // 跳转到方案详情页
+                window.location.href = `travel-custom.html?planId=${result.planId}`;
+            } else {
+                alert('保存失败：' + result.message);
+            }
+        } catch (error) {
+            console.error('保存行程失败：', error);
+            alert('保存行程失败，请检查网络或后端服务是否运行');
+        }
+    }
+</script>
+</body>
+</html>

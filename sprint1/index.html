@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelGo - 发现澳门的美好</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- 自定义Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb', // 主色调（旅行蓝）
+                        secondary: '#f97316', // 辅助色（活力橙）
+                        neutral: {
+                            100: '#f8fafc',
+                            200: '#e2e8f0',
+                            800: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+            .nav-active {
+                @apply text-primary border-b-2 border-primary;
+            }
+        }
+    </style>
+</head>
+<body class="bg-neutral-100 font-sans text-neutral-800">
+    <!-- 顶部导航栏 -->
+    <header class="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-2">
+                <i class="fa-solid fa-plane-departure text-2xl text-primary"></i>
+                <span class="text-xl font-bold text-primary">TravelGo</span>
+            </a>
+            
+            <!-- 搜索框（桌面端）- 替换为带联想的搜索 -->
+            <div class="hidden md:flex items-center flex-1 max-w-md mx-8 relative">
+                <input type="text" id="desktop-search-input" placeholder="搜索澳门景点/餐饮/酒店..." 
+                       class="w-full py-2 px-4 rounded-l-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                <button id="desktop-search-btn" class="bg-primary text-white py-2 px-6 rounded-r-lg hover:bg-primary/90 transition">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <!-- 桌面端联想列表 -->
+                <div id="desktop-suggest-list" class="hidden absolute top-full left-0 right-0 bg-white border rounded-lg mt-1 py-1 shadow-lg z-10"></div>
+            </div>
+            
+            <!-- 用户功能区 -->
+            <div class="flex items-center gap-4">
+                <button class="hidden md:block text-neutral-800 hover:text-primary transition">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+                <button class="hidden md:block text-neutral-800 hover:text-primary transition">
+                    <i class="fa-solid fa-bell"></i>
+                </button>
+                <div class="relative">
+                    <button class="flex items-center gap-2">
+                        <img src="https://picsum.photos/36/36" alt="用户头像" class="w-9 h-9 rounded-full object-cover">
+                        <span class="hidden md:inline text-sm font-medium">澳门旅行者</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航（移动端） -->
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 py-2">
+            <div class="flex justify-around">
+                <a href="#" class="flex flex-col items-center nav-active py-1">
+                    <i class="fa-solid fa-home text-lg"></i>
+                    <span class="text-xs mt-1">首页</span>
+                </a>
+                <a href="#" class="flex flex-col items-center text-neutral-500 hover:text-primary py-1 transition">
+                    <i class="fa-solid fa-compass text-lg"></i>
+                    <span class="text-xs mt-1">发现澳门</span>
+                </a>
+                <a href="#" class="flex flex-col items-center text-neutral-500 hover:text-primary py-1 transition">
+                    <i class="fa-solid fa-calendar text-lg"></i>
+                    <span class="text-xs mt-1">澳门行程</span>
+                </a>
+                <a href="#" class="flex flex-col items-center text-neutral-500 hover:text-primary py-1 transition">
+                    <i class="fa-solid fa-user text-lg"></i>
+                    <span class="text-xs mt-1">我的</span>
+                </a>
+            </div>
+        </nav>
+        
+        <!-- 顶部导航（桌面端） -->
+        <nav class="hidden md:block border-t border-neutral-200">
+            <div class="container mx-auto px-4">
+                <ul class="flex gap-6 py-2">
+                    <li><a href="#" class="nav-active py-2 px-1 font-medium">首页</a></li>
+                    <li><a href="#" class="text-neutral-600 hover:text-primary py-2 px-1 font-medium transition">澳门景点</a></li>
+                    <li><a href="#" class="text-neutral-600 hover:text-primary py-2 px-1 font-medium transition">澳门酒店</a></li>
+                    <li><a href="#" class="text-neutral-600 hover:text-primary py-2 px-1 font-medium transition">澳门美食</a></li>
+                    <li><a href="#" class="text-neutral-600 hover:text-primary py-2 px-1 font-medium transition">澳门攻略</a></li>
+                    <li><a href="#" class="text-neutral-600 hover:text-primary py-2 px-1 font-medium transition">当地体验</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 pt-24 pb-20 md:pb-8">
+        <!-- 澳门横幅轮播 -->
+        <section class="relative rounded-2xl overflow-hidden mb-8 h-64 md:h-96">
+            <div class="carousel relative h-full">
+                <div class="carousel-item absolute inset-0 opacity-100 transition-opacity duration-500">
+                    <img src="https://picsum.photos/1200/600?random=12" alt="澳门旅行横幅" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex flex-col justify-center px-8 md:px-16">
+                        <h2 class="text-white text-2xl md:text-4xl font-bold mb-2">探索澳门的美好</h2>
+                        <p class="text-white/90 text-base md:text-lg mb-4">定制专属你的澳门旅行计划</p>
+                        <button 
+                            onclick="window.location.href='travel-custom.html'"
+                            class="bg-secondary text-white px-6 py-2 rounded-lg w-fit hover:bg-secondary/90 transition">
+                            立即定制
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 移动端搜索框 - 替换为带联想的搜索 -->
+        <section class="md:hidden mb-8">
+            <div class="flex items-center relative">
+                <input type="text" id="mobile-search-input" placeholder="搜索澳门景点/餐饮/酒店..." 
+                       class="w-full py-3 px-4 rounded-l-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                <button id="mobile-search-btn" class="bg-primary text-white py-3 px-6 rounded-r-lg hover:bg-primary/90 transition">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <!-- 移动端联想列表 -->
+                <div id="mobile-suggest-list" class="hidden absolute top-full left-0 right-0 bg-white border rounded-lg mt-1 py-1 shadow-lg z-10"></div>
+            </div>
+        </section>
+
+        <!-- 搜索结果展示区（新增） -->
+        <section id="search-result-section" class="mb-10 hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="search-result-title">搜索结果</h3>
+                <button id="clear-search" class="text-primary text-sm hover:underline">清空</button>
+            </div>
+            <div id="search-result-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- 搜索结果动态渲染 -->
+            </div>
+        </section>
+
+        <!-- 澳门热门景点 -->
+        <section class="mb-10" id="macao-hot-spots">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">澳门热门景点</h3>
+                <a href="#" class="text-primary text-sm hover:underline">查看全部 <i class="fa-solid fa-chevron-right text-xs"></i></a>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- 澳门景点1：大三巴 -->
+                <div class="rounded-xl overflow-hidden card-shadow bg-white group">
+                    <div class="relative h-40 overflow-hidden">
+                        <img src="https://picsum.photos/400/300?random=13" alt="大三巴牌坊" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        <div class="absolute top-2 right-2 bg-white/80 backdrop-blur-sm rounded-full px-2 py-1 text-xs font-medium">
+                            热门
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-medium mb-1">大三巴牌坊</h4>
+                        <div class="flex items-center text-xs text-neutral-500">
+                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i>
+                            <span>4.9</span>
+                            <span class="mx-1">|</span>
+                            <span>澳门半岛</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 澳门景点2：官也街 -->
+                <div class="rounded-xl overflow-hidden card-shadow bg-white group">
+                    <div class="relative h-40 overflow-hidden">
+                        <img src="https://picsum.photos/400/300?random=14" alt="官也街" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-medium mb-1">官也街</h4>
+                        <div class="flex items-center text-xs text-neutral-500">
+                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i>
+                            <span>4.8</span>
+                            <span class="mx-1">|</span>
+                            <span>氹仔</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 澳门景点3：澳门塔 -->
+                <div class="rounded-xl overflow-hidden card-shadow bg-white group">
+                    <div class="relative h-40 overflow-hidden">
+                        <img src="https://picsum.photos/400/300?random=15" alt="澳门旅游塔" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-medium mb-1">澳门旅游塔</h4>
+                        <div class="flex items-center text-xs text-neutral-500">
+                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i>
+                            <span>4.7</span>
+                            <span class="mx-1">|</span>
+                            <span>澳门半岛</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 澳门景点4：路环渔村 -->
+                <div class="rounded-xl overflow-hidden card-shadow bg-white group">
+                    <div class="relative h-40 overflow-hidden">
+                        <img src="https://picsum.photos/400/300?random=16" alt="路环渔村" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-medium mb-1">路环渔村</h4>
+                        <div class="flex items-center text-xs text-neutral-500">
+                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i>
+                            <span>4.9</span>
+                            <span class="mx-1">|</span>
+                            <span>路环</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 澳门精选行程 -->
+        <section class="mb-10">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">澳门精选行程</h3>
+                <a href="#" class="text-primary text-sm hover:underline">查看全部 <i class="fa-solid fa-chevron-right text-xs"></i></a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 澳门行程1：一日游 -->
+                <div class="rounded-xl overflow-hidden card-shadow bg-white">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://picsum.photos/600/400?random=17" alt="澳门一日游" class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 bg-secondary text-white text-xs rounded-full px-2 py-1">
+                            热销
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-lg mb-2">澳门一日游 | 大三巴-官也街-威尼斯人</h4>
+                        <div class="flex items-center text-sm text-neutral-500 mb-3">
+                            <i class="fa-solid fa-calendar-days mr-1"></i>
+                            <span>1天</span>
+                            <span class="mx-2">|</span>
+                            <i class="fa-solid fa-users mr-1"></i>
+                            <span>自由行</span>
+                            <span class="mx-2">|</span>
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            <span>澳门</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-secondary font-bold text-xl">¥399</span>
+                                <span class="text-neutral-400 text-sm line-through ml-1">¥499</span>
+                            </div>
+                            <button class="bg-primary/10 text-primary px-4 py-1 rounded-lg hover:bg-primary/20 transition text-sm">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 澳门行程2：两日游 -->
+                <div class="rounded-xl overflow-hidden card-shadow bg-white">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://picsum.photos/600/400?random=18" alt="澳门两日游" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-lg mb-2">澳门两日游 | 半岛+氹仔深度游</h4>
+                        <div class="flex items-center text-sm text-neutral-500 mb-3">
+                            <i class="fa-solid fa-calendar-days mr-1"></i>
+                            <span>2天1晚</span>
+                            <span class="mx-2">|</span>
+                            <i class="fa-solid fa-users mr-1"></i>
+                            <span>定制团</span>
+                            <span class="mx-2">|</span>
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            <span>澳门</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-secondary font-bold text-xl">¥899</span>
+                                <span class="text-neutral-400 text-sm line-through ml-1">¥999</span>
+                            </div>
+                            <button class="bg-primary/10 text-primary px-4 py-1 rounded-lg hover:bg-primary/20 transition text-sm">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 澳门行程3：亲子游 -->
+                <div class="rounded-xl overflow-hidden card-shadow bg-white">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://picsum.photos/600/400?random=19" alt="澳门亲子游" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-lg mb-2">澳门亲子游 | 科学馆+熊猫馆+酒店玩乐</h4>
+                        <div class="flex items-center text-sm text-neutral-500 mb-3">
+                            <i class="fa-solid fa-calendar-days mr-1"></i>
+                            <span>2天1晚</span>
+                            <span class="mx-2">|</span>
+                            <i class="fa-solid fa-users mr-1"></i>
+                            <span>亲子团</span>
+                            <span class="mx-2">|</span>
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            <span>澳门</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-secondary font-bold text-xl">¥1299</span>
+                                <span class="text-neutral-400 text-sm line-through ml-1">¥1499</span>
+                            </div>
+                            <button class="bg-primary/10 text-primary px-4 py-1 rounded-lg hover:bg-primary/20 transition text-sm">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 澳门旅行服务分类 -->
+        <section class="mb-10">
+            <h3 class="text-xl font-bold mb-4">澳门旅行服务</h3>
+            <div class="grid grid-cols-4 md:grid-cols-8 gap-4 text-center">
+                <a href="#" class="flex flex-col items-center py-3 hover:text-primary transition">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-hotel text-primary text-xl"></i>
+                    </div>
+                    <span class="text-sm">澳门酒店</span>
+                </a>
+                <a href="#" class="flex flex-col items-center py-3 hover:text-primary transition">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-plane text-primary text-xl"></i>
+                    </div>
+                    <span class="text-sm">机票预订</span>
+                </a>
+                <a href="#" class="flex flex-col items-center py-3 hover:text-primary transition">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-taxi text-primary text-xl"></i>
+                    </div>
+                    <span class="text-sm">澳门打车</span>
+                </a>
+                <a href="#" class="flex flex-col items-center py-3 hover:text-primary transition">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-bus text-primary text-xl"></i>
+                    </div>
+                    <span class="text-sm">发财车指南</span>
+                </a>
+                <a href="#" class="flex flex-col items-center py-3 hover:text-primary transition">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-map-location-dot text-primary text-xl"></i>
+                    </div>
+                    <span class="text-sm">澳门导览</span>
+                </a>
+                <a href="#" class="flex flex-col items-center py-3 hover:text-primary transition">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-ticket text-primary text-xl"></i>
+                    </div>
+                    <span class="text-sm">景点门票</span>
+                </a>
+                <a href="#" class="flex flex-col items-center py-3 hover:text-primary transition">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-utensils text-primary text-xl"></i>
+                    </div>
+                    <span class="text-sm">澳门美食</span>
+                </a>
+                <a href="#" class="flex flex-col items-center py-3 hover:text-primary transition">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-headset text-primary text-xl"></i>
+                    </div>
+                    <span class="text-sm">在线客服</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 澳门用户评价 -->
+        <section class="mb-10">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">用户评价</h3>
+                <a href="#" class="text-primary text-sm hover:underline">查看全部 <i class="fa-solid fa-chevron-right text-xs"></i></a>
+            </div>
+            <div class="overflow-x-auto pb-4">
+                <div class="flex gap-4 min-w-max">
+                    <!-- 评价卡片1 -->
+                    <div class="bg-white rounded-xl p-4 card-shadow w-80">
+                        <div class="flex items-center mb-3">
+                            <img src="https://picsum.photos/48/48?random=20" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                            <div>
+                                <h5 class="font-medium">李**</h5>
+                                <div class="flex text-yellow-400 text-xs">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-neutral-600 mb-2">"澳门一日游行程安排得非常合理，导游讲解很专业，发财车指南太实用了！"</p>
+                        <p class="text-xs text-neutral-400">行程：澳门一日游 | 2024-03-15</p>
+                    </div>
+                    <!-- 评价卡片2 -->
+                    <div class="bg-white rounded-xl p-4 card-shadow w-80">
+                        <div class="flex items-center mb-3">
+                            <img src="https://picsum.photos/48/48?random=21" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                            <div>
+                                <h5 class="font-medium">张**</h5>
+                                <div class="flex text-yellow-400 text-xs">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-neutral-600 mb-2">"澳门亲子游体验超棒，科学馆和熊猫馆孩子超喜欢，酒店也很舒适！"</p>
+                        <p class="text-xs text-neutral-400">行程：澳门亲子游 | 2024-02-20</p>
+                    </div>
+                    <!-- 评价卡片3 -->
+                    <div class="bg-white rounded-xl p-4 card-shadow w-80">
+                        <div class="flex items-center mb-3">
+                            <img src="https://picsum.photos/48/48?random=22" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                            <div>
+                                <h5 class="font-medium">王**</h5>
+                                <div class="flex text-yellow-400 text-xs">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-neutral-600 mb-2">"澳门两日游深度体验了半岛和氹仔，葡国菜超正宗，就是打车有点贵。"</p>
+                        <p class="text-xs text-neutral-400">行程：澳门两日游 | 2024-04-05</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-neutral-200 py-6 md:pt-10 md:pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-plane-departure text-2xl text-primary"></i>
+                        <span class="text-xl font-bold text-primary">TravelGo</span>
+                    </div>
+                    <p class="text-sm text-neutral-500 mb-4">发现澳门，享受旅行<br>一站式澳门旅行服务平台</p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-primary hover:text-white transition">
+                            <i class="fa-brands fa-weixin"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-primary hover:text-white transition">
+                            <i class="fa-brands fa-weibo"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-primary hover:text-white transition">
+                            <i class="fa-brands fa-zhihu"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">产品服务</h4>
+                    <ul class="space-y-2 text-sm text-neutral-500">
+                        <li><a href="#" class="hover:text-primary transition">澳门跟团游</a></li>
+                        <li><a href="#" class="hover:text-primary transition">澳门自由行</a></li>
+                        <li><a href="#" class="hover:text-primary transition">定制旅行</a></li>
+                        <li><a href="#" class="hover:text-primary transition">澳门酒店预订</a></li>
+                        <li><a href="#" class="hover:text-primary transition">机票预订</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">关于我们</h4>
+                    <ul class="space-y-2 text-sm text-neutral-500">
+                        <li><a href="#" class="hover:text-primary transition">公司介绍</a></li>
+                        <li><a href="#" class="hover:text-primary transition">联系方式</a></li>
+                        <li><a href="#" class="hover:text-primary transition">加入我们</a></li>
+                        <li><a href="#" class="hover:text-primary transition">隐私政策</a></li>
+                        <li><a href="#" class="hover:text-primary transition">用户协议</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">联系我们</h4>
+                    <ul class="space-y-2 text-sm text-neutral-500">
+                        <li class="flex items-center"><i class="fa-solid fa-phone w-4 mr-2"></i> 400-123-4567</li>
+                        <li class="flex items-center"><i class="fa-solid fa-envelope w-4 mr-2"></i> service@travelgo.com</li>
+                        <li class="flex items-center"><i class="fa-solid fa-map-marker-alt w-4 mr-2"></i> 澳门半岛新马路100号</li>
+                    </ul>
+                    <div class="mt-4">
+                        <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-primary/90 transition">
+                            在线客服
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-neutral-200 mt-8 pt-6 text-center text-sm text-neutral-400">
+                <p>© 2024 TravelGo 澳门旅行网 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript - 集成搜索功能 -->
+    <script>
+        // 基础配置
+        const API_BASE = "http://localhost:5000/api"; // 替换为你的后端服务地址
+        // 澳门本地缓存POI（模拟数据，实际从后端获取）
+        const macaoPoiCache = {
+            "大三巴": {name: "大三巴牌坊", address: "澳门半岛花王堂区炮台山下", location: "113.543953,22.198041", type: "景点"},
+            "官也街": {name: "官也街", address: "澳门氹仔施督宪正街与告利雅施利华街之间", location: "113.504460,22.147270", type: "美食/购物"},
+            "澳门塔": {name: "澳门旅游塔", address: "澳门半岛南湾湖广场", location: "113.561480,22.116470", type: "景点"},
+            "路环渔村": {name: "路环渔村", address: "澳门路环岛圣方济各堂区", location: "113.488720,22.104580", type: "景点"},
+            "葡国菜": {name: "小飞象葡国餐厅", address: "澳门氹仔官也街14号", location: "113.505120,22.146890", type: "餐饮"},
+            "威尼斯人": {name: "澳门威尼斯人度假村酒店", address: "澳门氹仔金光大道望德圣母湾大马路", location: "113.500870,22.141560", type: "酒店/景点"}
+        };
+
+        // DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 导航栏滚动效果
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 10) {
+                    header.classList.add('shadow-md');
+                } else {
+                    header.classList.remove('shadow-md');
+                }
+            });
+
+            // 移动端底部导航激活状态切换
+            const navLinks = document.querySelectorAll('.md\\:hidden nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navLinks.forEach(l => l.classList.remove('nav-active', 'text-primary'));
+                    navLinks.forEach(l => l.classList.add('text-neutral-500'));
+                    this.classList.add('nav-active');
+                    this.classList.remove('text-neutral-500');
+                });
+            });
+
+            // 初始化搜索功能
+            initSearch();
+        });
+
+        // 初始化搜索功能
+        function initSearch() {
+            // 绑定移动端搜索
+            bindSearchEvents(
+                document.getElementById('mobile-search-input'),
+                document.getElementById('mobile-suggest-list'),
+                document.getElementById('mobile-search-btn')
+            );
+
+            // 绑定桌面端搜索
+            bindSearchEvents(
+                document.getElementById('desktop-search-input'),
+                document.getElementById('desktop-suggest-list'),
+                document.getElementById('desktop-search-btn')
+            );
+
+            // 清空搜索结果
+            document.getElementById('clear-search').addEventListener('click', function() {
+                document.getElementById('search-result-section').classList.add('hidden');
+                document.getElementById('macao-hot-spots').classList.remove('hidden');
+                document.getElementById('mobile-search-input').value = '';
+                document.getElementById('desktop-search-input').value = '';
+            });
+        }
+
+        // 绑定搜索事件
+        function bindSearchEvents(inputEl, suggestEl, btnEl) {
+            // 输入联想
+            inputEl.addEventListener('input', debounce(function() {
+                const keyword = this.value.trim();
+                if (keyword.length < 1) {
+                    suggestEl.classList.add('hidden');
+                    return;
+                }
+
+                // 本地缓存联想（实际项目中调用后端接口）
+                const suggestList = Object.keys(macaoPoiCache).filter(key => key.includes(keyword));
+                if (suggestList.length > 0) {
+                    suggestEl.innerHTML = suggestList.map(item => 
+                        `<div class="px-4 py-2 hover:bg-neutral-100 cursor-pointer">${item}</div>`
+                    ).join("");
+                    suggestEl.classList.remove('hidden');
+
+                    // 点击联想项
+                    suggestEl.querySelectorAll('div').forEach(item => {
+                        item.addEventListener('click', function() {
+                            inputEl.value = this.textContent;
+                            suggestEl.classList.add('hidden');
+                            doSearch(inputEl.value);
+                        });
+                    });
+                } else {
+                    suggestEl.classList.add('hidden');
+                }
+            }, 300));
+
+            // 点击搜索按钮
+            btnEl.addEventListener('click', function() {
+                const keyword = inputEl.value.trim();
+                if (keyword) {
+                    doSearch(keyword);
+                }
+            });
+
+            // 回车搜索
+            inputEl.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const keyword = this.value.trim();
+                    if (keyword) {
+                        doSearch(keyword);
+                    }
+                }
+            });
+
+            // 点击页面其他区域关闭联想
+            document.addEventListener('click', function(e) {
+                if (!inputEl.contains(e.target) && !suggestEl.contains(e.target)) {
+                    suggestEl.classList.add('hidden');
+                }
+            });
+        }
+
+        // 执行搜索
+        function doSearch(keyword) {
+            // 显示搜索结果区域，隐藏热门景点
+            document.getElementById('search-result-section').classList.remove('hidden');
+            document.getElementById('macao-hot-spots').classList.add('hidden');
+            document.getElementById('search-result-title').textContent = `搜索结果：${keyword}`;
+            
+            const resultContainer = document.getElementById('search-result-container');
+            resultContainer.innerHTML = '<div class="col-span-full text-center py-4">加载中...</div>';
+
+            // 模拟后端请求（实际项目中替换为fetch调用）
+            setTimeout(() => {
+                // 本地缓存搜索（实际项目中调用/api/search/poi）
+                const searchResults = [];
+                // 精确匹配
+                if (macaoPoiCache[keyword]) {
+                    searchResults.push(macaoPoiCache[keyword]);
+                }
+                // 模糊匹配
+                Object.keys(macaoPoiCache).forEach(key => {
+                    if (key.includes(keyword) && !searchResults.some(item => item.name === macaoPoiCache[key].name)) {
+                        searchResults.push(macaoPoiCache[key]);
+                    }
+                });
+
+                // 渲染结果
+                if (searchResults.length > 0) {
+                    resultContainer.innerHTML = searchResults.map(item => `
+                        <div class="bg-white rounded-xl overflow-hidden card-shadow">
+                            <div class="relative h-40 overflow-hidden">
+                                <img src="https://picsum.photos/400/300?random=${Math.floor(Math.random()*30)}" alt="${item.name}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="p-3">
+                                <h4 class="font-medium mb-1">${item.name}</h4>
+                                <p class="text-xs text-neutral-500 mb-2">${item.address}</p>
+                                <div class="flex items-center gap-2">
+                                    <button class="text-primary text-xs" onclick="showMap('${item.location}')">
+                                        <i class="fa-solid fa-map-marker-alt"></i> 查看位置
+                                    </button>
+                                    <button class="text-primary text-xs" onclick="navigateTo('${item.location}')">
+                                        <i class="fa-solid fa-directions"></i> 导航
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join("");
+                } else {
+                    resultContainer.innerHTML = '<div class="col-span-full text-center py-4 text-neutral-500">暂无搜索结果</div>';
+                }
+            }, 500);
+        }
+
+        // 辅助函数：防抖
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, arguments), wait);
+            };
+        }
+
+        // 辅助函数：查看地图
+        function showMap(location) {
+            window.open(`https://amap.com/place/${location}`, "_blank");
+        }
+
+        // 辅助函数：导航
+        function navigateTo(location) {
+            const [lng, lat] = location.split(",");
+            // 移动端唤起高德地图APP，桌面端打开网页版
+            if (/Android|iPhone/i.test(navigator.userAgent)) {
+                window.location.href = `amapuri://route/plan/?dlat=${lat}&dlon=${lng}&dname=目的地&dev=0&t=1`;
+            } else {
+                window.open(`https://amap.com/navigation?destination=${lat},${lng}`, "_blank");
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+2026-03-05 16:45:35,919 - travelgo-backend - INFO - ∞¢¿Ô‘∆∞Ÿ¡∂øÕªß∂À≥ı ºªØ≥…π¶
+2026-03-05 16:45:35,922 - travelgo-backend - INFO - ∆Ù∂ØTravelGo∫Û∂À∑˛ŒÒ£∫http://0.0.0.0:5000
+2026-03-05 16:45:36,148 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.244.5.207:5000
+2026-03-05 16:45:36,151 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-05 16:45:36,229 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-05 16:45:42,801 - travelgo-backend - INFO - ∞¢¿Ô‘∆∞Ÿ¡∂øÕªß∂À≥ı ºªØ≥…π¶
+2026-03-05 16:45:42,803 - travelgo-backend - INFO - ∆Ù∂ØTravelGo∫Û∂À∑˛ŒÒ£∫http://0.0.0.0:5000
+2026-03-05 16:45:42,878 - werkzeug - WARNING -  * Debugger is active!
+2026-03-05 16:45:42,940 - werkzeug - INFO -  * Debugger PIN: 321-825-905
+2026-03-05 16:46:38,765 - werkzeug - INFO - 127.0.0.1 - - [05/Mar/2026 16:46:38] "OPTIONS /api/generate-travel-plan HTTP/1.1" 200 -
+2026-03-05 16:46:39,030 - travelgo-backend - INFO -  ’µΩ…˙≥…¬√––∑Ω∞∏«Î«Û: 127.0.0.1 - {'from': 'π„÷›', 'to': '∞ƒ√≈', 'people': '2', 'days': '2', 'budget': 'æ≠º√–Õ'}
+2026-03-05 16:46:39,031 - travelgo-backend - INFO - …˙≥…Ã· æ¥ ÕÍ≥…£¨≥§∂»£∫373
+2026-03-05 16:47:32,561 - httpx - INFO - HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-05 16:47:32,563 - travelgo-backend - INFO - AI…˙≥…∑Ω∞∏≥…π¶£¨ƒ⁄»›≥§∂»£∫2630
+2026-03-05 16:47:32,564 - werkzeug - INFO - 127.0.0.1 - - [05/Mar/2026 16:47:32] "POST /api/generate-travel-plan HTTP/1.1" 200 -
+2026-03-05 16:56:05,940 - werkzeug - INFO -  * Detected change in 'C:\\Users\\D1355\\Desktop\\sprint1\\app.py', reloading
+2026-03-05 16:56:06,091 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-05 16:56:12,303 - travelgo-backend - INFO - ∞¢¿Ô‘∆∞Ÿ¡∂øÕªß∂À≥ı ºªØ≥…π¶
+2026-03-05 16:56:12,305 - travelgo-backend - INFO - ∆Ù∂ØTravelGo∫Û∂À∑˛ŒÒ£∫http://0.0.0.0:5000
+2026-03-05 16:56:12,394 - werkzeug - WARNING -  * Debugger is active!
+2026-03-05 16:56:12,456 - werkzeug - INFO -  * Debugger PIN: 321-825-905
+2026-03-05 16:58:26,123 - werkzeug - INFO - 127.0.0.1 - - [05/Mar/2026 16:58:26] "OPTIONS /api/generate-travel-plan HTTP/1.1" 200 -
+2026-03-05 16:58:26,383 - travelgo-backend - INFO -  ’µΩ…˙≥…¬√––∑Ω∞∏«Î«Û: 127.0.0.1 - {'from': 'π„÷›', 'to': '∞ƒ√≈', 'people': '2', 'days': '2', 'budget': ' Ê  –Õ'}
+2026-03-05 16:58:26,383 - travelgo-backend - INFO - …˙≥…Ã· æ¥ ÕÍ≥…£¨≥§∂»£∫373
+2026-03-05 17:02:16,329 - travelgo-backend - INFO - ∞¢¿Ô‘∆∞Ÿ¡∂øÕªß∂À≥ı ºªØ≥…π¶
+2026-03-05 17:02:16,331 - travelgo-backend - INFO - ∆Ù∂ØTravelGo∫Û∂À∑˛ŒÒ£∫http://0.0.0.0:5000
+2026-03-05 17:02:16,446 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.244.5.207:5000
+2026-03-05 17:02:16,446 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-05 17:02:16,479 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-05 17:02:21,654 - travelgo-backend - INFO - ∞¢¿Ô‘∆∞Ÿ¡∂øÕªß∂À≥ı ºªØ≥…π¶
+2026-03-05 17:02:21,656 - travelgo-backend - INFO - ∆Ù∂ØTravelGo∫Û∂À∑˛ŒÒ£∫http://0.0.0.0:5000
+2026-03-05 17:02:21,710 - werkzeug - WARNING -  * Debugger is active!
+2026-03-05 17:02:21,757 - werkzeug - INFO -  * Debugger PIN: 321-825-905
+2026-03-05 17:02:37,967 - werkzeug - INFO - 127.0.0.1 - - [05/Mar/2026 17:02:37] "OPTIONS /api/generate-travel-plan HTTP/1.1" 200 -
+2026-03-05 17:02:38,215 - travelgo-backend - INFO -  ’µΩ…˙≥…¬√––∑Ω∞∏«Î«Û: 127.0.0.1 - {'from': 'π„÷›', 'to': '∞ƒ√≈', 'people': '2', 'days': '2', 'budget': ' Ê  –Õ'}
+2026-03-05 17:02:38,215 - travelgo-backend - INFO - …˙≥…Ã· æ¥ ÕÍ≥…£¨≥§∂»£∫373
+2026-03-05 17:03:05,622 - httpx - INFO - HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-05 17:03:05,626 - travelgo-backend - INFO - AI…˙≥…∑Ω∞∏≥…π¶£¨ƒ⁄»›≥§∂»£∫2041
+2026-03-05 17:03:05,628 - werkzeug - INFO - 127.0.0.1 - - [05/Mar/2026 17:03:05] "POST /api/generate-travel-plan HTTP/1.1" 200 -

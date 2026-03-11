@@ -1,0 +1,50 @@
+2026-03-06 00:25:14,049 - travelgo-backend - INFO - ∞¢¿Ô‘∆∞Ÿ¡∂øÕªß∂À≥ı ºªØ≥…π¶
+2026-03-06 00:25:14,053 - travelgo-backend - INFO - ∆Ù∂ØTravelGo∫Û∂À∑˛ŒÒ£∫http://0.0.0.0:5000
+2026-03-06 00:25:14,212 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.101.4:5000
+2026-03-06 00:25:14,212 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-06 00:25:14,249 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-06 00:25:19,166 - travelgo-backend - INFO - ∞¢¿Ô‘∆∞Ÿ¡∂øÕªß∂À≥ı ºªØ≥…π¶
+2026-03-06 00:25:19,168 - travelgo-backend - INFO - ∆Ù∂ØTravelGo∫Û∂À∑˛ŒÒ£∫http://0.0.0.0:5000
+2026-03-06 00:25:19,222 - werkzeug - WARNING -  * Debugger is active!
+2026-03-06 00:25:19,266 - werkzeug - INFO -  * Debugger PIN: 321-825-905
+2026-03-06 00:25:53,415 - werkzeug - INFO - 127.0.0.1 - - [06/Mar/2026 00:25:53] "OPTIONS /api/generate-travel-plan HTTP/1.1" 200 -
+2026-03-06 00:25:53,683 - travelgo-backend - INFO -  ’µΩ…˙≥…¬√––∑Ω∞∏«Î«Û: 127.0.0.1 - {'from': '±±æ©', 'to': '∞ƒ√≈', 'people': '2', 'days': '5', 'budget': ' Ê  –Õ'}
+2026-03-06 00:25:53,684 - travelgo-backend - INFO - …˙≥…Ã· æ¥ ÕÍ≥…£¨≥§∂»£∫373
+2026-03-06 00:26:28,614 - httpx - INFO - HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-06 00:26:28,621 - travelgo-backend - INFO - AI…˙≥…∑Ω∞∏≥…π¶£¨ƒ⁄»›≥§∂»£∫2901
+2026-03-06 00:26:28,622 - werkzeug - INFO - 127.0.0.1 - - [06/Mar/2026 00:26:28] "POST /api/generate-travel-plan HTTP/1.1" 200 -
+2026-03-06 12:52:07,395 - travelgo-backend - INFO - ∞¢¿Ô‘∆∞Ÿ¡∂øÕªß∂À≥ı ºªØ≥…π¶
+2026-03-06 12:52:07,425 - travelgo-backend - INFO - ∆Ù∂ØTravelGo∫Û∂À∑˛ŒÒ£∫http://0.0.0.0:5000
+2026-03-06 12:52:07,587 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.244.5.207:5000
+2026-03-06 12:52:07,588 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-06 12:52:07,627 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-06 12:52:12,814 - travelgo-backend - INFO - ∞¢¿Ô‘∆∞Ÿ¡∂øÕªß∂À≥ı ºªØ≥…π¶
+2026-03-06 12:52:12,816 - travelgo-backend - INFO - ∆Ù∂ØTravelGo∫Û∂À∑˛ŒÒ£∫http://0.0.0.0:5000
+2026-03-06 12:52:12,875 - werkzeug - WARNING -  * Debugger is active!
+2026-03-06 12:52:12,924 - werkzeug - INFO -  * Debugger PIN: 335-782-594
+2026-03-06 12:55:35,666 - werkzeug - INFO -  * Detected change in 'C:\\Users\\D1355\\Desktop\\sprint1\\app.py', reloading
+2026-03-06 12:55:35,789 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-06 12:55:39,653 - travelgo-backend - INFO - ∞¢¿Ô‘∆∞Ÿ¡∂øÕªß∂À≥ı ºªØ≥…π¶
+2026-03-06 12:55:39,655 - travelgo-backend - INFO - ∆Ù∂ØTravelGo∫Û∂À∑˛ŒÒ£∫http://0.0.0.0:5000
+2026-03-06 12:55:39,711 - werkzeug - WARNING -  * Debugger is active!
+2026-03-06 12:55:39,759 - werkzeug - INFO -  * Debugger PIN: 335-782-594
+2026-03-06 13:12:16,439 - werkzeug - INFO - 127.0.0.1 - - [06/Mar/2026 13:12:16] "[33mOPTIONS /api/save-itinerary HTTP/1.1[0m" 404 -
+2026-03-06 13:14:16,049 - werkzeug - INFO - 127.0.0.1 - - [06/Mar/2026 13:14:16] "[33mOPTIONS /api/save-itinerary HTTP/1.1[0m" 404 -
+2026-03-07 18:02:36,351 - werkzeug - INFO -  * Detected change in 'C:\\Users\\D1355\\Desktop\\sprint1\\app.py', reloading
+2026-03-07 18:02:36,546 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-07 18:11:43,820 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-08 11:11:46,556 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-08 11:31:57,617 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-08 11:32:19,759 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-08 23:46:55,551 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-08 23:47:13,035 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-09 17:39:55,664 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-09 22:57:07,577 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-09 22:57:26,983 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-09 23:39:55,843 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)

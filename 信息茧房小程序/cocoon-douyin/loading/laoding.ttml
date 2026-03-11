@@ -1,0 +1,4 @@
+<view class="container">
+  <view class="loading-text">AI 分析中…</view>
+  <view class="loading-animation"></view>
+</view>

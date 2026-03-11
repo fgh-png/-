@@ -1,0 +1,6 @@
+<view class="container">
+  <view class="title">你被困在信息茧房了吗？</view>
+  <view class="subtitle">AI 3秒检测你的认知视野</view>
+  <button class="start-btn" bindtap="goToCheck">开始检测</button>
+  <view class="footer">仅分析内容，不保存隐私</view>
+</view>

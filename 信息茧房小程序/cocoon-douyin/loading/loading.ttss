@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f8f8f8;
+}
+
+.loading-text {
+  font-size: 32rpx;
+  color: #333;
+  margin-bottom: 40rpx;
+}
+
+.loading-animation {
+  width: 80rpx;
+  height: 80rpx;
+  border: 8rpx solid #eee;
+  border-top: 8rpx solid #00a8ff;
+  border-radius: 50%;
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

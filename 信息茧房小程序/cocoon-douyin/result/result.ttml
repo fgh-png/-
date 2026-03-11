@@ -1,0 +1,29 @@
+<view class="container">
+  <view class="score-card">
+    <view class="score-title">茧房指数</view>
+    <view class="score-num">{{result.score}}</view>
+    <view class="score-level">{{result.level}}</view>
+  </view>
+
+  <view class="type-tag">{{result.type}}</view>
+
+  <view class="desc-box">
+    <view class="desc-title">分析：</view>
+    <view class="desc-content">{{result.desc}}</view>
+  </view>
+
+  <view class="suggest-box">
+    <view class="suggest-title">破茧建议：</view>
+    <view class="suggest-content">{{result.suggest}}</view>
+  </view>
+
+  <view class="btn-group">
+    <button class="recheck-btn" bindtap="recheck">重新检测</button>
+    <button class="share-btn" bindtap="share">生成分享图</button>
+  </view>
+  
+  <!-- 抖音广告位（流量主），上线后配置 -->
+  <view class="ad-box" style="margin-top: 40rpx;">
+    <!-- 这里替换成抖音流量主广告组件 -->
+  </view>
+</view>

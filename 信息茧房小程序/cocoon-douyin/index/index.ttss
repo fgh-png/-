@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 0 40rpx;
+  background-color: #f8f8f8;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 80rpx;
+  text-align: center;
+}
+
+.start-btn {
+  width: 80%;
+  height: 80rpx;
+  line-height: 80rpx;
+  background-color: #00a8ff; /* 抖音主色替换微信绿色 */
+  color: #fff;
+  font-size: 32rpx;
+  border-radius: 40rpx;
+}
+
+.footer {
+  position: fixed;
+  bottom: 40rpx;
+  font-size: 24rpx;
+  color: #999;
+}

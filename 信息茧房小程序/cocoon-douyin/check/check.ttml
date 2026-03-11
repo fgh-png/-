@@ -1,0 +1,12 @@
+<view class="container">
+  <textarea 
+    class="input-area" 
+    placeholder="粘贴你最近常看的标题、话题、评论、文案"
+    bindinput="onContentInput"
+  ></textarea>
+  <button 
+    class="submit-btn" 
+    bindtap="submitContent"
+    disabled="{{!content}}"
+  >提交检测</button>
+</view>
